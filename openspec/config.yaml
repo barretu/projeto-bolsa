@@ -1,0 +1,40 @@
+schema: spec-driven
+
+context: |
+  Product decisions live in docs/brief.md; read it before proposing a change.
+  Write all artifacts and code in English; UI text is bilingual (pt-BR + en) and always goes through next-intl, never hard-coded.
+  The API returns error codes (e.g. EMAIL_TAKEN), never user-facing text.
+  Once auth exists, every task/plan query filters by the logged-in user; another user's id returns 404.
+  Docker is for local development only; production is Vercel (Next.js + FastAPI under /api) + Neon Postgres.
+  Keep each change minimal: no features from the brief's "Out of v1" list unless the change is about them.
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
