@@ -4,7 +4,7 @@
 
 - [x] 1.1 Install Docker Engine + Compose plugin and uv on the host; verify `docker run --rm hello-world` and `uv --version` succeed
 - [x] 1.2 Add root `.gitignore` (node_modules, .next, .venv, __pycache__, .env) and verify `git status` does not list ignored paths
-- [ ] 1.3 Add `docker-compose.yml` with a `db` Postgres service (port 5432, named volume) and an init script that creates `app_test`; verify `docker compose up -d db` and `docker compose exec db psql -U app -l` lists `app` and `app_test`
+- [x] 1.3 Add `docker-compose.yml` with a `db` Postgres service (port 5432, named volume) and an init script that creates `app_test`; verify `docker compose up -d db` and `docker compose exec db psql -U app -l` lists `app` and `app_test`
 
 ## 2. Backend: project and data model
 
