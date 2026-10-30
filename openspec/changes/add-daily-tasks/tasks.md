@@ -8,19 +8,19 @@
 
 ## 2. Backend: project and data model
 
-- [ ] 2.1 Create `api/` with `uv init` and add fastapi, uvicorn, sqlalchemy, psycopg, alembic, pytest, httpx; verify `uv run python -c "import fastapi"` succeeds
-- [ ] 2.2 Add the FastAPI app with `GET /api/health`; verify `uv run uvicorn app.main:app --reload` serves `{"status":"ok"}` and `/docs` opens
-- [ ] 2.3 Add the database session (`DATABASE_URL` with local default) and the `Task` model; verify the app starts with Postgres running
-- [ ] 2.4 Set up Alembic and the first migration creating `tasks`; verify `uv run alembic upgrade head` creates the table (`\d tasks` in psql)
-- [ ] 2.5 Add pytest fixtures (TestClient, `app_test` database, truncate between tests); verify `uv run pytest` passes a health test
+- [x] 2.1 Create `api/` with `uv init` and add fastapi, uvicorn, sqlalchemy, psycopg, alembic, pytest, httpx; verify `uv run python -c "import fastapi"` succeeds
+- [x] 2.2 Add the FastAPI app with `GET /api/health`; verify `uv run uvicorn app.main:app --reload` serves `{"status":"ok"}` and `/docs` opens
+- [x] 2.3 Add the database session (`DATABASE_URL` with local default) and the `Task` model; verify the app starts with Postgres running
+- [x] 2.4 Set up Alembic and the first migration creating `tasks`; verify `uv run alembic upgrade head` creates the table (`\d tasks` in psql)
+- [x] 2.5 Add pytest fixtures (TestClient, `app_test` database, truncate between tests); verify `uv run pytest` passes a health test
 
 ## 3. Backend: task endpoints
 
-- [ ] 3.1 Implement `POST /api/tasks` with title rules and error codes; verify tests for valid task, `TITLE_REQUIRED` and `TITLE_TOO_LONG` pass
-- [ ] 3.2 Implement `GET /api/tasks?date=` with pending-first ordering; verify tests for "mixed day is ordered" and "other days are not shown" pass
-- [ ] 3.3 Implement `GET /api/tasks/overdue?before=`; verify tests for pending vs done tasks from yesterday pass
-- [ ] 3.4 Implement `PATCH /api/tasks/{id}` (title, date, done) and `DELETE /api/tasks/{id}`; verify tests for toggle, reschedule, delete and `TASK_NOT_FOUND` pass
-- [ ] 3.5 Map request validation failures to `VALIDATION_ERROR`; verify a test with an invalid date returns 422 with that code
+- [x] 3.1 Implement `POST /api/tasks` with title rules and error codes; verify tests for valid task, `TITLE_REQUIRED` and `TITLE_TOO_LONG` pass
+- [x] 3.2 Implement `GET /api/tasks?date=` with pending-first ordering; verify tests for "mixed day is ordered" and "other days are not shown" pass
+- [x] 3.3 Implement `GET /api/tasks/overdue?before=`; verify tests for pending vs done tasks from yesterday pass
+- [x] 3.4 Implement `PATCH /api/tasks/{id}` (title, date, done) and `DELETE /api/tasks/{id}`; verify tests for toggle, reschedule, delete and `TASK_NOT_FOUND` pass
+- [x] 3.5 Map request validation failures to `VALIDATION_ERROR`; verify a test with an invalid date returns 422 with that code
 
 ## 4. Frontend: project, UI kit and languages
 
