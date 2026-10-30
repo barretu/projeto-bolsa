@@ -25,7 +25,7 @@
 ## 4. Frontend: project, UI kit and languages
 
 - [x] 4.1 Create `web/` with `create-next-app` (TypeScript, Tailwind, App Router) and add the `/api` dev rewrite; verify `npm run dev` serves the page and `/api/health` returns ok through Next
-- [ ] 4.2 Run `shadcn init` and add button, input, checkbox, dialog, alert-dialog, skeleton, sonner; verify components exist under `web/components/ui/` and `npm run build` passes
+- [x] 4.2 Run `shadcn init` and add button, input, checkbox, dialog, alert-dialog, skeleton, sonner; verify components exist under `web/components/ui/` and `npm run build` passes
 - [ ] 4.3 Set up next-intl without routing (cookie, then Accept-Language), `messages/pt-BR.json` and `messages/en.json`, and the header language switcher; verify a pt browser sees pt-BR, an es browser sees en, and the switch survives a reload
 
 ## 5. Frontend: Today screen
