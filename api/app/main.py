@@ -1,6 +1,8 @@
 import datetime as dt
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -9,6 +11,11 @@ from app.db import get_db
 from app.models import Task
 
 app = FastAPI()
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request: Request, exc: RequestValidationError):
+    return JSONResponse({"detail": "VALIDATION_ERROR"}, status_code=422)
 
 
 class TaskIn(BaseModel):

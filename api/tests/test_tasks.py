@@ -109,3 +109,9 @@ def test_unknown_task(client):
     ]:
         assert response.status_code == 404
         assert response.json() == {"detail": "TASK_NOT_FOUND"}
+
+
+def test_invalid_date(client):
+    response = client.get("/api/tasks", params={"date": "not-a-date"})
+    assert response.status_code == 422
+    assert response.json() == {"detail": "VALIDATION_ERROR"}
