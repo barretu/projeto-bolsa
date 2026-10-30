@@ -68,3 +68,44 @@ def test_overdue_lists_only_earlier_pending(client):
     response = client.get("/api/tasks/overdue", params={"before": "2026-10-21"})
     assert response.status_code == 200
     assert titles(response) == ["Pending two days ago", "Pending yesterday"]
+
+
+def create(client, title="Run", date="2026-10-21"):
+    return client.post("/api/tasks", json={"title": title, "date": date}).json()
+
+
+def test_toggle_done(client):
+    task = create(client)
+    response = client.patch(f"/api/tasks/{task['id']}", json={"done": True})
+    assert response.status_code == 200
+    assert response.json()["done"] is True
+
+
+def test_reschedule_leaves_day(client):
+    task = create(client)
+    client.patch(f"/api/tasks/{task['id']}", json={"date": "2026-10-22"})
+    assert titles(client.get("/api/tasks", params={"date": "2026-10-21"})) == []
+    assert titles(client.get("/api/tasks", params={"date": "2026-10-22"})) == ["Run"]
+
+
+def test_edit_blank_title(client):
+    task = create(client)
+    response = client.patch(f"/api/tasks/{task['id']}", json={"title": "  "})
+    assert response.status_code == 422
+    assert response.json() == {"detail": "TITLE_REQUIRED"}
+
+
+def test_delete_task(client):
+    task = create(client)
+    response = client.delete(f"/api/tasks/{task['id']}")
+    assert response.status_code == 204
+    assert count_tasks() == 0
+
+
+def test_unknown_task(client):
+    for response in [
+        client.patch("/api/tasks/999", json={"done": True}),
+        client.delete("/api/tasks/999"),
+    ]:
+        assert response.status_code == 404
+        assert response.json() == {"detail": "TASK_NOT_FOUND"}
