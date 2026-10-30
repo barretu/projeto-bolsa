@@ -49,6 +49,16 @@ def list_tasks(date: dt.date, db: Session = Depends(get_db)):
     return db.scalars(query).all()
 
 
+@app.get("/api/tasks/overdue", response_model=list[TaskOut])
+def list_overdue(before: dt.date, db: Session = Depends(get_db)):
+    query = (
+        select(Task)
+        .where(Task.date < before, Task.done.is_(False))
+        .order_by(Task.date, Task.created_at, Task.id)
+    )
+    return db.scalars(query).all()
+
+
 @app.post("/api/tasks", status_code=201, response_model=TaskOut)
 def create_task(body: TaskIn, db: Session = Depends(get_db)):
     task = Task(title=clean_title(body.title), date=body.date)

@@ -58,3 +58,13 @@ def test_day_hides_other_days(client):
     add_task("Tomorrow", "2026-10-22")
     response = client.get("/api/tasks", params={"date": "2026-10-21"})
     assert titles(response) == ["Today"]
+
+
+def test_overdue_lists_only_earlier_pending(client):
+    add_task("Pending yesterday", "2026-10-20")
+    add_task("Pending two days ago", "2026-10-19")
+    add_task("Done yesterday", "2026-10-20", done=True)
+    add_task("Pending today", "2026-10-21")
+    response = client.get("/api/tasks/overdue", params={"before": "2026-10-21"})
+    assert response.status_code == 200
+    assert titles(response) == ["Pending two days ago", "Pending yesterday"]
