@@ -6,6 +6,14 @@
     "title": "Hoje",
     "previousDay": "Dia anterior",
     "nextDay": "Próximo dia",
-    "loadError": "Não foi possível carregar as tarefas."
+    "loadError": "Não foi possível carregar as tarefas.",
+    "addPlaceholder": "Adicionar tarefa…"
+  },
+  "errors": {
+    "TITLE_REQUIRED": "O título é obrigatório.",
+    "TITLE_TOO_LONG": "O título pode ter no máximo 200 caracteres.",
+    "TASK_NOT_FOUND": "Esta tarefa não existe mais.",
+    "VALIDATION_ERROR": "Dados inválidos.",
+    "UNKNOWN": "Algo deu errado. Tente de novo."
   }
 }

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addDays, formatDay, today } from "@/lib/dates";
 
@@ -21,6 +22,9 @@ export function TodayView() {
   const inBrowser = useSyncExternalStore(subscribeNothing, () => true, () => false);
   const [offset, setOffset] = useState(0);
   const [tasks, setTasks] = useState<Task[] | null>(null);
+  const [version, setVersion] = useState(0); // bump to reload the list
+  const [title, setTitle] = useState("");
+  const errors = useTranslations("errors");
   const day = inBrowser ? addDays(today(), offset) : null;
 
   useEffect(() => {
@@ -42,11 +46,36 @@ export function TodayView() {
     return () => {
       cancelled = true;
     };
-  }, [day, t]);
+  }, [day, t, version]);
 
   function go(n: number) {
     setTasks(null);
     setOffset((o) => o + n);
+  }
+
+  // Calls the API; on failure shows the translated error code and returns false.
+  async function send(method: string, url: string, body?: object) {
+    try {
+      const r = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: body && JSON.stringify(body),
+      });
+      if (r.ok) return true;
+      const code = (await r.json().catch(() => null))?.detail;
+      toast.error(typeof code === "string" && errors.has(code) ? errors(code) : errors("UNKNOWN"));
+    } catch {
+      toast.error(errors("UNKNOWN"));
+    }
+    return false;
+  }
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (await send("POST", "/api/tasks", { title, date: day })) {
+      setTitle("");
+      setVersion((v) => v + 1);
+    }
   }
 
   return (
@@ -62,6 +91,16 @@ export function TodayView() {
           <ChevronRightIcon />
         </Button>
       </div>
+
+      <form onSubmit={add} className="mb-4">
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder={t("addPlaceholder")}
+          aria-label={t("addPlaceholder")}
+          disabled={!day}
+        />
+      </form>
 
       {tasks === null ? (
         <div className="space-y-2">

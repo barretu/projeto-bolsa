@@ -6,6 +6,14 @@
     "title": "Today",
     "previousDay": "Previous day",
     "nextDay": "Next day",
-    "loadError": "Could not load tasks."
+    "loadError": "Could not load tasks.",
+    "addPlaceholder": "Add a task…"
+  },
+  "errors": {
+    "TITLE_REQUIRED": "Title is required.",
+    "TITLE_TOO_LONG": "Title can have at most 200 characters.",
+    "TASK_NOT_FOUND": "This task no longer exists.",
+    "VALIDATION_ERROR": "Invalid data.",
+    "UNKNOWN": "Something went wrong. Try again."
   }
 }
