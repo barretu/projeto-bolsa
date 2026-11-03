@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
   async rewrites() {
     // Dev only: in production Vercel routes /api to FastAPI (deploy change).
     if (process.env.NODE_ENV !== "development") return [];
@@ -19,4 +17,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default createNextIntlPlugin()(nextConfig);
