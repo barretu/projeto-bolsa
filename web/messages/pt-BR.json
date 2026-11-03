@@ -16,7 +16,8 @@
     "save": "Salvar",
     "cancel": "Cancelar",
     "deleteTitle": "Apagar tarefa?",
-    "deleteDescription": "\"{title}\" será apagada. Isso não pode ser desfeito."
+    "deleteDescription": "\"{title}\" será apagada. Isso não pode ser desfeito.",
+    "overdue": "Atrasadas"
   },
   "errors": {
     "TITLE_REQUIRED": "O título é obrigatório.",

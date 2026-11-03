@@ -34,7 +34,7 @@
 - [x] 5.2 Build the day view: heading with localized date, ← → navigation, list pending first, done struck through, skeleton while loading, error toast; verify in the browser against the running API
 - [x] 5.3 Add quick add (Enter creates on the day shown, field clears) and show API error codes as translated messages; verify by adding a task on a future day and a 201-character title
 - [x] 5.4 Add toggle done (waits for server), edit dialog (title + native date input) and delete with AlertDialog confirmation; verify each, including cancel on delete and a reschedule leaving the current day
-- [ ] 5.5 Add the Overdue section (only on today, hidden when empty); verify with a pending and a done task dated yesterday
+- [x] 5.5 Add the Overdue section (only on today, hidden when empty); verify with a pending and a done task dated yesterday
 
 ## 6. Integration check
 

@@ -26,6 +26,12 @@ type Task = { id: number; title: string; date: string; done: boolean };
 
 const subscribeNothing = () => () => {};
 
+async function getTasks(url: string): Promise<Task[]> {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(String(r.status));
+  return r.json();
+}
+
 export function TodayView() {
   const t = useTranslations("Today");
   const errors = useTranslations("errors");
@@ -34,6 +40,7 @@ export function TodayView() {
   const inBrowser = useSyncExternalStore(subscribeNothing, () => true, () => false);
   const [offset, setOffset] = useState(0);
   const [tasks, setTasks] = useState<Task[] | null>(null);
+  const [overdue, setOverdue] = useState<Task[]>([]);
   const [version, setVersion] = useState(0); // bump to reload the list
   const [title, setTitle] = useState("");
   const [editing, setEditing] = useState<Task | null>(null);
@@ -43,17 +50,20 @@ export function TodayView() {
   useEffect(() => {
     if (!day) return;
     let cancelled = false;
-    fetch(`/api/tasks?date=${day}`)
-      .then((r) => {
-        if (!r.ok) throw new Error(String(r.status));
-        return r.json();
-      })
-      .then((data: Task[]) => {
-        if (!cancelled) setTasks(data);
+    Promise.all([
+      getTasks(`/api/tasks?date=${day}`),
+      // The Overdue section only exists on today's view.
+      day === today() ? getTasks(`/api/tasks/overdue?before=${day}`) : [],
+    ])
+      .then(([dayTasks, overdueTasks]) => {
+        if (cancelled) return;
+        setTasks(dayTasks);
+        setOverdue(overdueTasks);
       })
       .catch(() => {
         if (cancelled) return;
         setTasks([]);
+        setOverdue([]);
         toast.error(t("loadError"));
       });
     return () => {
@@ -113,6 +123,24 @@ export function TodayView() {
     }
   }
 
+  function renderTask(task: Task, showDate = false) {
+    return (
+      <li key={task.id} className="flex items-center gap-1">
+        <label className="flex flex-1 items-center gap-3 rounded-md px-2 py-1.5">
+          <Checkbox checked={task.done} onCheckedChange={(done) => toggle(task, done)} />
+          <span className={task.done ? "text-muted-foreground line-through" : ""}>{task.title}</span>
+          {showDate && <span className="text-xs text-muted-foreground">{formatDay(task.date, locale)}</span>}
+        </label>
+        <Button variant="ghost" size="icon-sm" aria-label={t("edit")} onClick={() => setEditing(task)}>
+          <PencilIcon />
+        </Button>
+        <Button variant="ghost" size="icon-sm" aria-label={t("delete")} onClick={() => setDeleting(task)}>
+          <Trash2Icon />
+        </Button>
+      </li>
+    );
+  }
+
   return (
     <main className="mx-auto w-full max-w-xl p-4">
       <div className="mb-4 flex items-center justify-between">
@@ -144,22 +172,15 @@ export function TodayView() {
           <Skeleton className="h-8" />
         </div>
       ) : (
-        <ul className="space-y-1">
-          {tasks.map((task) => (
-            <li key={task.id} className="flex items-center gap-1">
-              <label className="flex flex-1 items-center gap-3 rounded-md px-2 py-1.5">
-                <Checkbox checked={task.done} onCheckedChange={(done) => toggle(task, done)} />
-                <span className={task.done ? "text-muted-foreground line-through" : ""}>{task.title}</span>
-              </label>
-              <Button variant="ghost" size="icon-sm" aria-label={t("edit")} onClick={() => setEditing(task)}>
-                <PencilIcon />
-              </Button>
-              <Button variant="ghost" size="icon-sm" aria-label={t("delete")} onClick={() => setDeleting(task)}>
-                <Trash2Icon />
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <>
+          {overdue.length > 0 && (
+            <section className="mb-4 border-b pb-4">
+              <h2 className="mb-1 px-2 text-xs font-semibold uppercase text-destructive">{t("overdue")}</h2>
+              <ul className="space-y-1">{overdue.map((task) => renderTask(task, true))}</ul>
+            </section>
+          )}
+          <ul className="space-y-1">{tasks.map((task) => renderTask(task))}</ul>
+        </>
       )}
 
       <Dialog open={editing !== null} onOpenChange={(open) => !open && setEditing(null)}>

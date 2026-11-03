@@ -16,7 +16,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "deleteTitle": "Delete task?",
-    "deleteDescription": "\"{title}\" will be deleted. This cannot be undone."
+    "deleteDescription": "\"{title}\" will be deleted. This cannot be undone.",
+    "overdue": "Overdue"
   },
   "errors": {
     "TITLE_REQUIRED": "Title is required.",
