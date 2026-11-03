@@ -38,7 +38,7 @@
 
 ## 6. Integration check
 
-- [ ] 6.1 With db, api and web running, walk every scenario in `specs/tasks` and `specs/localization` in both languages; verify `uv run pytest` and `npm run build` both pass and `openspec validate add-daily-tasks --strict` is valid
+- [x] 6.1 With db, api and web running, walk every scenario in `specs/tasks` and `specs/localization` in both languages; verify `uv run pytest` and `npm run build` both pass and `openspec validate add-daily-tasks --strict` is valid
 
 ## Workflow follow-up
 
