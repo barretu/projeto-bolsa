@@ -7,7 +7,16 @@
     "previousDay": "Dia anterior",
     "nextDay": "Próximo dia",
     "loadError": "Não foi possível carregar as tarefas.",
-    "addPlaceholder": "Adicionar tarefa…"
+    "addPlaceholder": "Adicionar tarefa…",
+    "edit": "Editar",
+    "delete": "Apagar",
+    "editTitle": "Editar tarefa",
+    "titleLabel": "Título",
+    "dateLabel": "Data",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "deleteTitle": "Apagar tarefa?",
+    "deleteDescription": "\"{title}\" será apagada. Isso não pode ser desfeito."
   },
   "errors": {
     "TITLE_REQUIRED": "O título é obrigatório.",

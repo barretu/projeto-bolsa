@@ -44,4 +44,4 @@ Outcome of the grilling session (2026-10-21). Source for every OpenSpec change p
 4. Deploy (Vercel + Neon)
 
 ## Out of v1 (future changes)
-Recurring tasks/habits, tags, priority, notes, time of day, reminders, stats, drag-to-reorder, password reset, demo account, language stored on the account, frontend tests.
+Recurring tasks/habits, tags, priority, notes, time of day, reminders, stats, drag-to-reorder, password reset, demo account, language stored on the account, frontend tests, undo toast after deleting a task (replacing the confirmation dialog).

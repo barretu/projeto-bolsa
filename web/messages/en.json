@@ -7,7 +7,16 @@
     "previousDay": "Previous day",
     "nextDay": "Next day",
     "loadError": "Could not load tasks.",
-    "addPlaceholder": "Add a task…"
+    "addPlaceholder": "Add a task…",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editTitle": "Edit task",
+    "titleLabel": "Title",
+    "dateLabel": "Date",
+    "save": "Save",
+    "cancel": "Cancel",
+    "deleteTitle": "Delete task?",
+    "deleteDescription": "\"{title}\" will be deleted. This cannot be undone."
   },
   "errors": {
     "TITLE_REQUIRED": "Title is required.",

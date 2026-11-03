@@ -1,12 +1,23 @@
 "use client";
 
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addDays, formatDay, today } from "@/lib/dates";
@@ -17,6 +28,7 @@ const subscribeNothing = () => () => {};
 
 export function TodayView() {
   const t = useTranslations("Today");
+  const errors = useTranslations("errors");
   const locale = useLocale();
   // "Today" must come from the browser clock, so the server renders no day at all.
   const inBrowser = useSyncExternalStore(subscribeNothing, () => true, () => false);
@@ -24,7 +36,8 @@ export function TodayView() {
   const [tasks, setTasks] = useState<Task[] | null>(null);
   const [version, setVersion] = useState(0); // bump to reload the list
   const [title, setTitle] = useState("");
-  const errors = useTranslations("errors");
+  const [editing, setEditing] = useState<Task | null>(null);
+  const [deleting, setDeleting] = useState<Task | null>(null);
   const day = inBrowser ? addDays(today(), offset) : null;
 
   useEffect(() => {
@@ -78,6 +91,28 @@ export function TodayView() {
     }
   }
 
+  // The checkbox only changes after the reload, i.e. once the server confirmed.
+  async function toggle(task: Task, done: boolean) {
+    if (await send("PATCH", `/api/tasks/${task.id}`, { done })) setVersion((v) => v + 1);
+  }
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editing) return;
+    if (await send("PATCH", `/api/tasks/${editing.id}`, { title: editing.title, date: editing.date })) {
+      setEditing(null);
+      setVersion((v) => v + 1);
+    }
+  }
+
+  async function remove() {
+    if (!deleting) return;
+    if (await send("DELETE", `/api/tasks/${deleting.id}`)) {
+      setDeleting(null);
+      setVersion((v) => v + 1);
+    }
+  }
+
   return (
     <main className="mx-auto w-full max-w-xl p-4">
       <div className="mb-4 flex items-center justify-between">
@@ -111,15 +146,68 @@ export function TodayView() {
       ) : (
         <ul className="space-y-1">
           {tasks.map((task) => (
-            <li key={task.id}>
-              <label className="flex items-center gap-3 rounded-md px-2 py-1.5">
-                <Checkbox checked={task.done} readOnly />
+            <li key={task.id} className="flex items-center gap-1">
+              <label className="flex flex-1 items-center gap-3 rounded-md px-2 py-1.5">
+                <Checkbox checked={task.done} onCheckedChange={(done) => toggle(task, done)} />
                 <span className={task.done ? "text-muted-foreground line-through" : ""}>{task.title}</span>
               </label>
+              <Button variant="ghost" size="icon-sm" aria-label={t("edit")} onClick={() => setEditing(task)}>
+                <PencilIcon />
+              </Button>
+              <Button variant="ghost" size="icon-sm" aria-label={t("delete")} onClick={() => setDeleting(task)}>
+                <Trash2Icon />
+              </Button>
             </li>
           ))}
         </ul>
       )}
+
+      <Dialog open={editing !== null} onOpenChange={(open) => !open && setEditing(null)}>
+        <DialogContent>
+          <form onSubmit={save} className="grid gap-4">
+            <DialogHeader>
+              <DialogTitle>{t("editTitle")}</DialogTitle>
+            </DialogHeader>
+            <label className="grid gap-1.5">
+              {t("titleLabel")}
+              <Input
+                value={editing?.title ?? ""}
+                onChange={(e) => setEditing((task) => task && { ...task, title: e.target.value })}
+              />
+            </label>
+            <label className="grid gap-1.5">
+              {t("dateLabel")}
+              <Input
+                type="date"
+                required
+                value={editing?.date ?? ""}
+                onChange={(e) => setEditing((task) => task && { ...task, date: e.target.value })}
+              />
+            </label>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setEditing(null)}>
+                {t("cancel")}
+              </Button>
+              <Button type="submit">{t("save")}</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={deleting !== null} onOpenChange={(open) => !open && setDeleting(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("deleteTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDescription", { title: deleting?.title ?? "" })}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={remove}>
+              {t("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 }
