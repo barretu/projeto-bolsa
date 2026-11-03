@@ -10,13 +10,17 @@ const options = [
   { locale: "en", label: "EN" },
 ];
 
+function saveLocale(locale: string) {
+  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; samesite=lax`;
+}
+
 export function LanguageSwitcher() {
   const current = useLocale();
   const router = useRouter();
   const t = useTranslations("Header");
 
   function choose(locale: string) {
-    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; samesite=lax`;
+    saveLocale(locale);
     router.refresh();
   }
 

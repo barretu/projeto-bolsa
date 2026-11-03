@@ -3,6 +3,9 @@
     "language": "Language"
   },
   "Today": {
-    "title": "Today"
+    "title": "Today",
+    "previousDay": "Previous day",
+    "nextDay": "Next day",
+    "loadError": "Could not load tasks."
   }
 }

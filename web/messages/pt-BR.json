@@ -3,6 +3,9 @@
     "language": "Idioma"
   },
   "Today": {
-    "title": "Hoje"
+    "title": "Hoje",
+    "previousDay": "Dia anterior",
+    "nextDay": "Próximo dia",
+    "loadError": "Não foi possível carregar as tarefas."
   }
 }

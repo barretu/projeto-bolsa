@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             <LanguageSwitcher />
           </header>
           {children}
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>
